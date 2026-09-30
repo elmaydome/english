@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رحلة الكلمات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    box-sizing:border-box;
+    --bg:#11112a;
+    --bg-panel:#1c1c42;
+    --bg-panel-alt:#242452;
+    --bg-raised:#2b2b5c;
+    --text:#f4f3ff;
+    --text-dim:#aeacd6;
+    --text-faint:#8583b3;
+    --gold:#ffd166;
+    --line:#34346b;
+    --danger:#ff6b6b;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+    padding-top:var(--safe-top);
+    padding-bottom:var(--safe-bottom);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:var(--safe-top);}
+  body{
+    margin:0;
+    min-height:100%;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Baloo Bhaijaan 2','Cairo',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:
+      radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,.5), transparent),
+      radial-gradient(2px 2px at 80% 10%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1.5px 1.5px at 60% 70%, rgba(255,255,255,.35), transparent),
+      radial-gradient(1.5px 1.5px at 30% 85%, rgba(255,255,255,.3), transparent),
+      radial-gradient(2px 2px at 90% 60%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1.5px 1.5px at 45% 40%, rgba(255,255,255,.3), transparent);
+    pointer-events:none;
+    z-index:0;
+  }
+  .eng{font-family:'Baloo 2','Baloo Bhaijaan 2',sans-serif;}
+  h1,h2,h3{margin:0; font-weight:700;}
+  p{margin:0;}
+  button{font-family:inherit; cursor:pointer;}
+  button:focus-visible, a:focus-visible, input:focus-visible{
+    outline:3px solid var(--gold); outline-offset:2px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+
+  /* header */
+  header{
+    position:sticky; top:0; z-index:20;
+    padding:calc(14px + var(--safe-top)) 18px 14px;
+    background:linear-gradient(180deg, rgba(17,17,42,.97), rgba(17,17,42,.88));
+    backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-badge{
+    width:38px; height:38px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, #6a6ae0, #302f7a);
+    font-size:20px;
+    box-shadow:0 0 0 3px rgba(255,209,102,.15);
+  }
+  .brand h1{font-size:19px;}
+  .brand span{display:block; font-size:11px; color:var(--text-faint); font-weight:500;}
+  .stat-pill{
+    display:flex; align-items:center; gap:6px;
+    background:var(--bg-panel-alt); border:1px solid var(--line);
+    padding:7px 12px; border-radius:999px; font-size:13px; font-weight:600;
+  }
+
+  main{position:relative; z-index:1; max-width:760px; margin:0 auto; padding:18px 18px calc(96px + var(--safe-bottom));}
+  .screen{display:none;}
+  .screen.active{display:block; animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  /* home */
+  .hero-card{
+    background:linear-gradient(160deg, var(--bg-raised), var(--bg-panel));
+    border:1px solid var(--line);
+    border-radius:26px;
+    padding:22px;
+    margin-bottom:18px;
+  }
+  .hero-card h2{font-size:21px; line-height:1.5;}
+  .hero-card .sub{color:var(--text-dim); font-size:14.5px; margin-top:6px; line-height:1.6;}
+  .cta-btn{
+    margin-top:16px; width:100%; border:none; border-radius:999px;
+    padding:15px 18px; font-size:16.5px; font-weight:700;
+    background:linear-gradient(90deg,#ffd166,#ffb703);
+    color:#2a1c00;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .cta-btn:active{transform:scale(.98);}
+  .cta-btn.ghost{
+    background:var(--bg-panel-alt); color:var(--text); border:1px solid var(--line);
+  }
+  .section-title{font-size:15.5px; color:var(--text-dim); margin:22px 4px 10px; font-weight:600;}
+
+  .mini-map{display:flex; gap:10px; overflow-x:auto; padding:2px 2px 8px;}
+  .mini-planet{
+    flex:0 0 auto; width:78px; text-align:center; padding:10px 6px 8px;
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:18px;
+  }
+  .mini-planet .em{font-size:26px;}
+  .mini-planet .name{font-size:11px; color:var(--text-dim); margin-top:4px; line-height:1.3; min-height:28px;}
+  .ring{width:34px; height:34px; border-radius:50%; margin:6px auto 0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff;}
+
+  /* units map */
+  .planet-row{
+    display:flex; align-items:center; gap:14px;
+    background:var(--bg-panel); border:1px solid var(--line);
+    border-radius:22px; padding:14px; margin-bottom:14px;
+    text-align:right; width:100%; color:var(--text);
+    border-inline-start:5px solid var(--accent, var(--gold));
+  }
+  .planet-emoji{
+    width:52px; height:52px; border-radius:16px; flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center; font-size:26px;
+    background:color-mix(in srgb, var(--accent) 22%, var(--bg-panel-alt));
+  }
+  .planet-info{flex:1; min-width:0;}
+  .planet-info h3{font-size:16.5px;}
+  .planet-info .en-title{font-size:12px; color:var(--text-faint); margin-top:2px;}
+  .planet-info .meta{font-size:12px; color:var(--text-dim); margin-top:6px; display:flex; gap:10px; flex-wrap:wrap;}
+  .progress-ring{width:46px; height:46px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;}
+
+  /* unit detail */
+  .back-row{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .icon-btn{
+    background:var(--bg-panel-alt); border:1px solid var(--line); color:var(--text);
+    width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .unit-head{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .unit-head .planet-emoji{width:56px; height:56px; font-size:28px;}
+  .action-row{display:flex; gap:10px; margin-bottom:18px;}
+  .action-row .cta-btn{margin-top:0;}
+  .word-row{
+    display:flex; align-items:center; gap:10px;
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:16px;
+    padding:12px 14px; margin-bottom:10px;
+  }
+  .word-main{flex:1; min-width:0;}
+  .word-main .en-word{font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:700;}
+  .word-main .ar-word{font-size:13.5px; color:var(--text-dim); margin-top:2px;}
+  .stars-mini{font-size:11px; color:var(--gold); margin-top:4px; letter-spacing:1px;}
+  .row-btn{background:transparent; border:none; color:var(--text-faint); font-size:16px; padding:6px;}
+  .add-word-btn{
+    width:100%; border:1.5px dashed var(--line); background:transparent; color:var(--text-dim);
+    border-radius:16px; padding:14px; font-size:14.5px; font-weight:600; margin-top:6px;
+  }
+
+  /* term plan */
+  .plan-controls{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
+  .field{flex:1; min-width:140px;}
+  .field label{display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px;}
+  .field input{
+    width:100%; background:var(--bg-panel); border:1px solid var(--line); color:var(--text);
+    border-radius:12px; padding:10px 12px; font-family:inherit; font-size:14px;
+  }
+  .plan-item{
+    display:flex; align-items:center; gap:12px;
+    background:var(--bg-panel); border:1px solid var(--line); border-inline-start:5px solid var(--accent);
+    border-radius:16px; padding:13px; margin-bottom:10px;
+  }
+  .plan-item .planet-emoji{width:42px; height:42px; font-size:20px;}
+  .plan-item .pi-title{font-size:14.5px; font-weight:700;}
+  .plan-item .pi-date{font-size:12.5px; color:var(--text-dim); margin-top:3px;}
+  .info-card{
+    background:var(--bg-panel-alt); border:1px solid var(--line); border-radius:18px;
+    padding:15px; font-size:13.5px; color:var(--text-dim); line-height:1.8; margin-top:6px;
+  }
+  .info-card b{color:var(--text);}
+
+  /* progress screen */
+  .stats-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px;}
+  .stat-box{background:var(--bg-panel); border:1px solid var(--line); border-radius:18px; padding:16px; text-align:center;}
+  .stat-box .num{font-size:26px; font-weight:800; color:var(--gold);}
+  .stat-box .lbl{font-size:12px; color:var(--text-dim); margin-top:4px;}
+  .bar-track{height:10px; background:var(--bg-panel-alt); border-radius:999px; overflow:hidden; margin-top:6px;}
+  .bar-fill{height:100%; border-radius:999px; background:var(--accent);}
+
+  /* bottom nav */
+  nav.tabbar{
+    position:fixed; bottom:0; left:0; right:0; z-index:20;
+    display:flex; justify-content:space-around;
+    background:rgba(24,24,52,.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    padding:9px 8px calc(9px + var(--safe-bottom));
+  }
+  .tab-btn{
+    background:none; border:none; color:var(--text-faint);
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    font-size:10.5px; font-weight:600; padding:4px 10px; border-radius:12px;
+  }
+  .tab-btn .ic{font-size:20px;}
+  .tab-btn.active{color:var(--gold); background:rgba(255,209,102,.1);}
+
+  /* session overlay */
+  .overlay{
+    position:fixed; inset:0; z-index:50; background:var(--bg);
+    display:none; flex-direction:column;
+    padding:calc(16px + var(--safe-top)) 18px calc(20px + var(--safe-bottom));
+  }
+  .overlay.active{display:flex;}
+  .sess-top{display:flex; align-items:center; gap:12px; margin-bottom:20px;}
+  .sess-progress{flex:1; height:8px; background:var(--bg-panel-alt); border-radius:999px; overflow:hidden;}
+  .sess-progress-fill{height:100%; background:var(--gold); border-radius:999px; transition:width .3s ease;}
+  .sess-body{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+
+  .flip-card{
+    width:100%; max-width:340px; height:220px; perspective:1200px; margin-bottom:26px;
+  }
+  .flip-inner{
+    position:relative; width:100%; height:100%; text-align:center;
+    transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border-radius:24px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:20px; gap:10px; border:1px solid var(--line);
+  }
+  .flip-front{background:linear-gradient(160deg,var(--bg-raised),var(--bg-panel));}
+  .flip-back{background:linear-gradient(160deg,var(--bg-panel-alt),var(--bg-raised)); transform:rotateY(180deg);}
+  .flip-face .word-big{font-family:'Baloo 2',sans-serif; font-size:32px; font-weight:800;}
+  .flip-face .hint{font-size:12.5px; color:var(--text-faint);}
+  .flip-face .ar-big{font-size:22px; font-weight:700;}
+
+  .know-row{display:flex; gap:12px; width:100%; max-width:340px;}
+  .know-btn{
+    flex:1; border:none; border-radius:18px; padding:15px 10px; font-weight:700; font-size:14.5px;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .know-btn.no{background:var(--bg-panel-alt); color:var(--danger); border:1px solid var(--danger);}
+  .know-btn.yes{background:linear-gradient(90deg,#06d6a0,#04b489); color:#00241a;}
+
+  .quiz-q{font-size:13.5px; color:var(--text-dim); margin-bottom:8px; text-align:center;}
+  .quiz-word{font-size:26px; font-weight:800; margin-bottom:28px; text-align:center;}
+  .quiz-word.eng{font-family:'Baloo 2',sans-serif;}
+  .quiz-opts{width:100%; max-width:380px; display:flex; flex-direction:column; gap:11px;}
+  .quiz-opt{
+    background:var(--bg-panel); border:1.5px solid var(--line); color:var(--text);
+    border-radius:16px; padding:14px 16px; font-size:15.5px; font-weight:600; text-align:right;
+  }
+  .quiz-opt.correct{background:rgba(6,214,160,.18); border-color:#06d6a0;}
+  .quiz-opt.wrong{background:rgba(255,107,107,.18); border-color:var(--danger);}
+
+  .sess-summary{text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;}
+  .sess-summary .big-em{font-size:56px;}
+  .close-x{background:none; border:none; color:var(--text-faint); font-size:22px;}
+
+  /* modal */
+  .modal-bg{position:fixed; inset:0; background:rgba(8,8,24,.7); z-index:60; display:none; align-items:flex-end; justify-content:center;}
+  .modal-bg.active{display:flex;}
+  .modal{
+    background:var(--bg-panel); width:100%; max-width:420px; border-radius:24px 24px 0 0;
+    padding:22px 20px calc(22px + var(--safe-bottom)); border:1px solid var(--line); border-bottom:none;
+  }
+  .modal h3{margin-bottom:14px;}
+  .modal input{
+    width:100%; background:var(--bg-panel-alt); border:1px solid var(--line); color:var(--text);
+    border-radius:12px; padding:12px 14px; font-family:inherit; font-size:15px; margin-bottom:12px;
+  }
+  .modal-row{display:flex; gap:10px; margin-top:6px;}
+  .modal-row button{flex:1; border-radius:14px; padding:13px; font-weight:700; font-size:14.5px; border:none;}
+  .modal-row .save{background:var(--gold); color:#2a1c00;}
+  .modal-row .cancel{background:var(--bg-panel-alt); color:var(--text-dim); border:1px solid var(--line);}
+  .modal-row .del{background:rgba(255,107,107,.15); color:var(--danger); border:1px solid var(--danger);}
+
+  .empty-note{text-align:center; color:var(--text-faint); font-size:14px; padding:30px 10px;}
+
+  .flip-card{position:relative;}
+  .speaker-btn{
+    position:absolute; top:10px; left:10px; z-index:5;
+    width:38px; height:38px; border-radius:50%;
+    background:var(--bg-panel-alt); border:1px solid var(--line); color:var(--text);
+    font-size:16px; display:flex; align-items:center; justify-content:center;
+  }
+  .speaker-btn:active{transform:scale(.9);}
+  .quiz-speak-btn{
+    width:40px; height:40px; border-radius:50%; border:1px solid var(--line);
+    background:var(--bg-panel-alt); color:var(--text); font-size:17px; margin-bottom:14px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .due-note{font-size:10.5px; color:var(--text-faint); margin-top:3px;}
+  .name-pill{border:1px solid var(--line); background:var(--bg-panel-alt); cursor:pointer;}
+
+  @media (min-width:640px){
+    .stats-grid{grid-template-columns:repeat(4,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-badge">🚀</div>
+    <div>
+      <h1>رحلة الكلمات</h1>
+      <span class="eng" style="direction:ltr; display:inline-block;">English Vocabulary Journey</span>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <button class="stat-pill name-pill" id="btn-name-pill">👤 <span id="name-pill-text">بطل</span></button>
+    <div class="stat-pill"><span>🔥</span><span id="streak-count">0</span></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section class="screen active" id="screen-home">
+    <div class="hero-card">
+      <h2 id="home-greeting">أهلاً يا بطل! 👋</h2>
+      <p class="sub" id="home-sub">جاهز لمراجعة كلمات النهاردة؟</p>
+      <p class="sub" id="home-last-active" style="margin-top:8px; font-size:12.5px; color:var(--text-faint);"></p>
+      <button class="cta-btn" id="btn-start-due">🎯 ابدأ المراجعة اليومية</button>
+      <button class="cta-btn ghost" id="btn-browse-units" style="margin-top:10px;">🪐 تصفح الوحدات</button>
+    </div>
+
+    <div class="section-title">رحلتك بين الكواكب</div>
+    <div class="mini-map" id="mini-map"></div>
+  </section>
+
+  <!-- UNITS MAP -->
+  <section class="screen" id="screen-units">
+    <h2 style="margin-bottom:16px;">🪐 كواكب الترم الأول</h2>
+    <div id="planet-list"></div>
+  </section>
+
+  <!-- UNIT DETAIL -->
+  <section class="screen" id="screen-unit-detail">
+    <div class="back-row">
+      <button class="icon-btn" id="btn-back-units">→</button>
+      <span style="color:var(--text-dim); font-size:14px;">كل الكواكب</span>
+    </div>
+    <div class="unit-head" id="unit-detail-head"></div>
+    <div class="action-row">
+      <button class="cta-btn" id="btn-unit-flash" style="background:linear-gradient(90deg,#4cc9f0,#3aa8d0); color:#052733;">🎴 بطاقات تعليمية</button>
+      <button class="cta-btn" id="btn-unit-quiz" style="background:linear-gradient(90deg,#b388ff,#8a5cf0); color:#1c0a3e;">📝 اختبار سريع</button>
+    </div>
+    <div id="unit-word-list"></div>
+    <button class="add-word-btn" id="btn-add-word">+ إضافة كلمة جديدة للكوكب ده</button>
+  </section>
+
+  <!-- TERM PLAN -->
+  <section class="screen" id="screen-plan">
+    <h2 style="margin-bottom:6px;">📅 خطة الترم الأول</h2>
+    <p style="color:var(--text-dim); font-size:13.5px; margin-bottom:16px;">حدد تاريخ بداية الترم ومدته، والتطبيق هيقسملك الست وحدات على الأسابيع تلقائيًا. التواريخ دي تقديرية — اظبطها حسب خطة المدرسة الفعلية.</p>
+    <div class="plan-controls">
+      <div class="field">
+        <label>تاريخ بداية الترم</label>
+        <input type="date" id="plan-start-date">
+      </div>
+      <div class="field">
+        <label>مدة الترم (أسابيع)</label>
+        <input type="number" id="plan-weeks" min="8" max="24" value="16">
+      </div>
+    </div>
+    <div id="plan-list"></div>
+    <div class="info-card">
+      <b>⭐ قاعدة المراجعة الذهبية:</b> بعد ما تحفظ الكلمة، راجعها تاني بعد يوم، وبعدين بعد 3 أيام، وبعدين بعد أسبوع، وبعدين بعد أسبوعين. التطبيق بيحسبلك ده أوتوماتيك في تبويب "الرئيسية" — تابع "المراجعة اليومية" كل يوم وهتلاقي المعلومة ثابتة قبل الامتحان بكتير.
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section class="screen" id="screen-progress">
+    <h2 style="margin-bottom:16px;">⭐ تقدمك</h2>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="num" id="stat-total">0</div><div class="lbl">كل الكلمات</div></div>
+      <div class="stat-box"><div class="num" id="stat-mastered">0</div><div class="lbl">اتقنتها 🏆</div></div>
+      <div class="stat-box"><div class="num" id="stat-streak">0</div><div class="lbl">أيام متتالية 🔥</div></div>
+      <div class="stat-box"><div class="num" id="stat-best-streak">0</div><div class="lbl">أطول سلسلة</div></div>
+    </div>
+    <div class="section-title">تقدمك في كل كوكب</div>
+    <div id="progress-per-unit"></div>
+    <button class="cta-btn ghost" id="btn-reset" style="margin-top:24px;">🔄 إعادة ضبط كل البيانات</button>
+  </section>
+
+</main>
+
+<nav class="tabbar">
+  <button class="tab-btn active" data-tab="home"><span class="ic">🏠</span>الرئيسية</button>
+  <button class="tab-btn" data-tab="units"><span class="ic">🪐</span>الكواكب</button>
+  <button class="tab-btn" data-tab="plan"><span class="ic">📅</span>خطة الترم</button>
+  <button class="tab-btn" data-tab="progress"><span class="ic">⭐</span>تقدمي</button>
+</nav>
+
+<!-- FLASHCARD OVERLAY -->
+<div class="overlay" id="overlay-flash">
+  <div class="sess-top">
+    <button class="close-x" id="flash-close">✕</button>
+    <div class="sess-progress"><div class="sess-progress-fill" id="flash-progress-fill"></div></div>
+    <span style="font-size:12.5px; color:var(--text-dim);" id="flash-counter">1/10</span>
+  </div>
+  <div class="sess-body">
+    <div class="flip-card" id="flip-card">
+      <button class="speaker-btn" id="flash-speak-btn" aria-label="اسمع نطق الكلمة">🔊</button>
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <span class="hint">إيه معنى الكلمة؟</span>
+          <span class="word-big eng" id="flash-front-word" style="direction:ltr;"></span>
+          <span class="hint">(دوس عشان تشوف الإجابة)</span>
+        </div>
+        <div class="flip-face flip-back">
+          <span class="hint eng" style="direction:ltr;" id="flash-back-word"></span>
+          <span class="ar-big" id="flash-back-meaning"></span>
+        </div>
+      </div>
+    </div>
+    <div class="know-row" id="flash-know-row" style="visibility:hidden;">
+      <button class="know-btn no" id="btn-still-learning">🔁<span>لسه محتاج مراجعة</span></button>
+      <button class="know-btn yes" id="btn-know-it">✅<span>عرفتها!</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div class="overlay" id="overlay-quiz">
+  <div class="sess-top">
+    <button class="close-x" id="quiz-close">✕</button>
+    <div class="sess-progress"><div class="sess-progress-fill" id="quiz-progress-fill"></div></div>
+    <span style="font-size:12.5px; color:var(--text-dim);" id="quiz-counter">1/10</span>
+  </div>
+  <div class="sess-body">
+    <div class="quiz-q" id="quiz-question-label"></div>
+    <div class="quiz-word" id="quiz-word"></div>
+    <button class="quiz-speak-btn" id="quiz-speak-btn" aria-label="اسمع نطق الكلمة" style="display:none;">🔊</button>
+    <div class="quiz-opts" id="quiz-opts"></div>
+  </div>
+</div>
+
+<!-- SUMMARY OVERLAY -->
+<div class="overlay" id="overlay-summary">
+  <div class="sess-body sess-summary">
+    <div class="big-em" id="summary-emoji">🎉</div>
+    <h2 id="summary-title">أحسنت!</h2>
+    <p class="sub" id="summary-sub" style="color:var(--text-dim);"></p>
+    <button class="cta-btn" id="summary-done" style="max-width:280px; margin-top:10px;">تمام، رجّعني للرئيسية</button>
+  </div>
+</div>
+
+<!-- WELCOME / NAME OVERLAY -->
+<div class="overlay" id="overlay-welcome">
+  <div class="sess-body sess-summary">
+    <div class="big-em">🚀</div>
+    <h2 id="welcome-title">أهلاً بيك في رحلة الكلمات!</h2>
+    <p class="sub" style="color:var(--text-dim); max-width:300px;">قولّنا اسمك عشان رحلتك تبقى باسمك، وهنشجعك في كل خطوة 🌟</p>
+    <input type="text" id="welcome-name-input" placeholder="اكتب اسمك هنا" style="width:100%; max-width:280px; background:var(--bg-panel); border:1px solid var(--line); color:var(--text); border-radius:14px; padding:14px 16px; font-family:inherit; font-size:16px; text-align:center;">
+    <button class="cta-btn" id="welcome-start-btn" style="max-width:280px;">يلا نبدأ الرحلة 🚀</button>
+  </div>
+</div>
+
+<!-- WORD FORM MODAL -->
+<div class="modal-bg" id="word-modal-bg">
+  <div class="modal">
+    <h3 id="word-modal-title">إضافة كلمة جديدة</h3>
+    <input type="text" id="modal-en" placeholder="الكلمة بالإنجليزي (مثال: internet)" style="direction:ltr; text-align:right;">
+    <input type="text" id="modal-ar" placeholder="المعنى بالعربي">
+    <div class="modal-row">
+      <button class="cancel" id="modal-cancel">إلغاء</button>
+      <button class="del" id="modal-delete" style="display:none;">حذف</button>
+      <button class="save" id="modal-save">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "vocabJourney_v1";
+  var INTERVALS = [1,3,7,14,30]; // days per mastery level
+
+  var DEFAULT_UNITS = [
+    {id:"u1", emoji:"💻", color:"#4CC9F0", titleAr:"العالم الرقمي", titleEn:"Life in a Digital World", words:[
+      ["internet","الإنترنت"],["device","جهاز"],["screen","شاشة"],["password","كلمة السر"],
+      ["download","تحميل"],["message","رسالة"],["network","شبكة"],["application","تطبيق"],
+      ["keyboard","لوحة المفاتيح"],["webcam","كاميرا ويب"],["digital","رقمي"],["tablet","كمبيوتر لوحي [تابلت]"],["ebooks","كتب إلكترونية"],["social media","وسائل التواصل الاجتماعي"],["screen time","وقت استخدام الشاشة"],["search","يبحث - بحث"],["website","موقع إلكتروني"],["smartboard","السبورة الذكية"],["laptop","حاسوب محمول [لابتوب]"],["night mode","وضع الرؤية الليلية [للشاشة]"],["app","تطبيق [على جهاز إلكتروني]"],["screen","شاشة"],["chat","يدردش / يتحدث بطريقة ودية"],["check","يفحص / يتحقق"],["technology","تكنولوجيا"],["devices","أجهزة"],["blog","مدونة إلكترونية"],["adventure","مغامرة"],["bedtime","وقت النوم"],["interactive","تفاعلي"],["type","يكتب [على لوحة مفاتيح]"],["remind","يذكر"],["balance,","يوازن / توازن"],["hybrid bus","حافلة هجينة [تعمل بالكهرباء والبنزين معًا]"],["reduce","يقلل"],["launch","ينطلق / يطلق"],["support","يدعم - يؤيد"],["affect","يؤثر على"],["vision","رؤية"],["greener","أكثر حفاظًا على البيئة"],["colorful","ملون"],["command","أمر"],["paper","ورق"],["roundtable","طاولة مستديرة / نقاش جماعي"],["classmates","زملاء الفصل"],["rules","قواعد"],["chance","فرصة"],["respectful","يتسم بالاحترام"],["produce","يُصدر / يُنتج"],["add","يُضيف"],["tips","نصائح / إرشادات"],["team project","مشروع فريق"],
+["take breaks","يأخذ فترات راحة"],["spend time","يقضي وقت"],["create jobs","يوفر فرص عمل"],["reduce screen time","يقلل وقت استخدام الشاشة"],["reduce pollution","يقلل التلوث"],["share content","يشارك محتوى"],
+["company","شركة"],["transportation","النقل"],["locally","محليًا"],["engines","محركات"],["smartphone","هاتف ذكي"],["diesel","وقود الديزل"],
+["printer","طابعة"],["tasks","مهام"],["keyboard","لوحة مفاتيح"],["webcam","كاميرا الويب / كاميرا رقمية"],["speakers","سماعات مكبرة"],["microphone","ميكروفون [مكبر صوت]"],["headphones","سماعات الأذن"],["mouse","فأرة"],
+["knowledge","المعرفة"],["board games","ألعاب لوحية"],["typing","الكتابة [على لوحة مفاتيح]"],["assignments","واجبات / مهام دراسية"],["click","ينقر بالفأرة"],["super","فائق / رائع"],["noticeboard","لوحة إعلانات"],["achieve","يحقق - ينجز"],["presentation","عرض تقديمي"],["record","يسجل"],["schoolwork","عمل / واجب مدرسي"],["helpful","متعاون"],["print","يطبع"],["search engine","محرك البحث"],
+["collaborate","يتعاون"],["involve","يتضمن / يشمل"],["magic","سحري"],["mysteries","ألغاز"],["appear","يظهر"],["announcement","إعلان"],["nervous","عصبي / متوتر"],["enter","يدخل"],["floating puzzles","ألغاز عائمة"],["bright","ساطع / لامع"],["glowing","متألق"],["cheerful","مرح / منتبه"],["eager","متحمس / مختلف"],["responsibility","مسؤولية"],["challenge","تحدٍّ"],["curious","شغوف / مهتم / فضولي"],["shy","خجول"],["village school","مدرسة قروية"],["shining","لامع"],["unlock","يفتح / يفك"],
+["ICT (Information and Communication Technology)","تكنولوجيا المعلومات والاتصالات"],["trust,","يثق / ثقة"],["the latest","الأحدث"],["safety","السلامة"],["routine","روتين [نظام يومي متكرر]"],["performance","أداء / عرض"],["slogan","شعار"],["news","الأخبار"],["amazing","مدهش / رائع"],["wonderful","رائع"],["fantastic","مذهل"],["normal","عادي"],["ordinary","عادي"],
+["teach","يعلم"],["educate","يثقف"],["learn","يتعلم"],
+["connect","يربط"],["join","يضم"],["link","يصل"],["disconnect","يفصل"],
+["online","متصل بالإنترنت"],["connected to the internet","متصل بالإنترنت"],["offline","غير متصل بالإنترنت"],
+["protect","يحمي"],["save","ينقذ"],["harm","يضر / يتلف"],
+["wisely","بحكمة"],["sensibly","بعقلانية"],["carelessly","بإهمال"],
+["useful","مفيد"],["helpful","مفيد"],["useless","عديم الفائدة"],["unhelpful","غير مفيد"],
+["support","يدعم"],["assist","يساعد"],["help","يساعد"],["discourage","ينفّر / يحبط"],
+["reduce","يقلل"],["decrease","ينقص"],["increase","يزيد"],
+["send","يرسل"],["sent","أرسل"],["sent","مُرسَل"],
+["hurt","يؤذي / يؤلم"],["hurt","آذى"],["hurt","مُؤذى"],
+["spend","يقضي وقت"],["spent","قضى وقت"],["spent","مقضي"],
+["ask","يسأل"],["inquire","يستفسر"],["answer","يجيب"],
+["achieve","يحقق"],["accomplish","ينجز"],["fail","يفشل / يرسب"],
+["important","مهم"],["necessary","ضروري"],["unimportant","غير مهم"],
+["start","يبدأ"],["begin","يبدأ"],["finish","ينهي"],["end","ينهي"],
+["deliver","يوصّل / يسلّم"],["receive","يستلم"],
+["write","يكتب"],["wrote","كتب"],["written","مكتوب"],
+["tell","يخبر"],["told","أخبر"],["told","مُخبَر"],
+["come","يأتي"],["came","أتى"],["come","أتى"],
+    ]},
+    {id:"u2", emoji:"📚", color:"#B388FF", titleAr:"أتعلم إزاي أتعلم", titleEn:"Learning to Learn", words:[
+      ["schedule","جدول"],["focus","تركيز"],["practice","تدريب"],["memorize","يحفظ"],
+["mistake","خطأ"],["improve","يتحسن"],["goal","هدف"],["habit","عادة"],
+["review","مراجعة"],["method","طريقة"],["understand","يفهم"],["understood","فهم"],["understood","مفهوم"],["draw","يرسم"],["drew","رسم"],["drawn","مرسوم"],["build","يبني"],["built","بنى"],["built","مبني"],["choose","يختار"],["chose","اختار"],["chosen","مختار"],["become","يصبح"],["became","أصبح"],["become","أصبح"],
+["communicate","يتواصل"],["cooperation","التعاون"],["apps","تطبيقات [على جهاز إلكتروني]"],["digital devices","أجهزة رقمية"],["creative","مبدع"],["benefits","فوائد"],["develop","يطور"],["solutions","حلول"],["leadership","القيادة"],["confident","واثق"],
+["confident","واثق"],["certain","متأكد"],["positive","إيجابي / متأكد"],["shy","خجول"],["unsure","غير متأكد"],["reason","سبب"],["cause","سبب"],["result","نتيجة"],["benefit","ميزة / فائدة"],["advantage","ميزة"],["profit","ربح"],["harm","ضرر"],["disadvantage","عيب"],["develop","يطور / ينمي"],["improve","يحسن"],["grow","ينمو"],["decrease","يقلل"],["weaken","يضعف"],["creative","مبدع"],["imaginative","خيالي"],["talented","موهوب"],["traditional","تقليدي"],
+["modern","حديث"],["supporting details","تفاصيل داعمة"],["together","معًا / سويًا"],["explain","يشرح / يفسر"],["media","الإعلام / وسائل الإعلام"],["express","يعبر"],["spidergram","شكل توضيحي عنكبوتي"],["create","يبتكر"],["freely","بحرية"],["computer programs","برامج الحاسب"],["likely","من المحتمل"],["thinkers","مفكرون"],["diagram","رسم توضيحي"],["opinions","آراء"],["teamwork","عمل جماعي"],
+["courage","شجاعة"],["ambition","طموح"],["respect","يحترم / احترام"],["hesitate","يتردد"],["whisper","يهمس"],["cheer","يهتف / يهلل"],["refuse","يرفض"],["clap","يصفق"],["required","مطلوب"],["invisible","غير مرئي"],["bridge","جسر / كوبري"],["beneath","تحت / أسفل"],["breath","نفس"],["unity","وحدة / تماسك / إتحاد"],["cross","يعبر"],["deep","عميق"],["sign","لافتة / علامة"],["instantly","فورًا / حالًا"],
+["mistake","خطأ"],["plan","خطة"],["reflect","يتأمل / يفكر مليًا"],["practice","يتدرب / تدريب"],["journal","يوميات / سجل يومي"],["communication","تواصل"],["remind","يذكر بـ"],["record","يسجل"],
+["voice","صوت [بشرى]"],["indicate","يدل على / يشير إلى"],["include","يشمل / يتضمن"],["habits","عادات"],["pronunciation","نطق [صوتي]"],["discover","يكتشف"],["plan","يخطط"],["reach","يصل"],["list","يسجل في قائمة"],["starter","بداية"],["until","حتى / لغاية"],["advice","نصيحة"],
+["practice","يتدرب"],["train","يتدرب"],["exercise","يتمرن"],["neglect","يهمل"],["try","يحاول"],["attempt","يحاول"],["give up","يستسلم"],["quit","يستسلم / يتوقف"],
+["organized","منظم / مرتب"],["distractions","مشتتات"],["expression","تعبير"],["physical","بدني"],["experiments","تجارب [علمية]"],["avoid","يتجنب"],["suit","يناسب / يلائم"],["methods = styles","طرق / وسائل"],["sight","حاسة البصر"],["focus","يركز"],["challenge","تحدي"],["neat","منظم / مهندم"],["passion","شغف / اهتمام"],["memorize","يحفظ / يتذكر [عن ظهر قلب]"],
+["experience","تجربة حياتية / خبرة سابقة"],["unforgettable","لا يُنسى"],["individually","بشكل فردي"],["schedule","جدول أو برنامج محدد للمواعيد"],["revise","يراجع"],["competition","مسابقة"],["folder","ملف / مجلد"],["enjoyable","ممتع"],["research","يبحث / بحث"],
+["unforgettable","لا يُنسى"],["memorable","لا يُنسى"],["forgettable","سهل نسيانه"],["distractions","مشتتات"],["interruptions","مقاطعات"],["focus","تركيز"],["suit","يناسب / يلائم"],["fit","يناسب"],["match","يطابق"],["mismatch","غير ملائم"],["memorize","يحفظ عن ظهر قلب"],["remember","يتذكر"],["forget","ينسى"],["improve","يُحسن"],["develop","يطور"],["damage","يلحق الضرر"],
+["mind maps","خرائط ذهنية"],["auditory","سمعي"],["explanation","تفسير / توضيح"],["kinesthetic","حركي"],["techniques","تقنيات / أساليب"],["visual","بصري"],["regularly","بانتظام"],["hands-on activities","أنشطة تطبيقية"],["improve","يُحسن"],["organize","ينظم"],["charts","مخططات / رسوم بيانية"],["review","يراجع / مراجعة"]
+    ]},
+    {id:"u3", emoji:"🌟", color:"#FF6B6B", titleAr:"قدوات وشخصيات ملهمة", titleEn:"Role Models", words:[
+      ["achievement","إنجاز"],["courage","شجاعة"],["inspire","يُلهم"],["example","قدوة"],
+      ["kindness","لطف"],["effort","مجهود"],["respect","احترام"],["honesty","صدق"],
+      ["leadership","قيادة"],["determination","إصرار"]
+    ]},
+    {id:"u4", emoji:"🤔", color:"#06D6A0", titleAr:"قرارات ذكية", titleEn:"Smart Choices", words:[
+      ["decision","قرار"],["consequence","نتيجة"],["advantage","ميزة"],["disadvantage","عيب"],
+      ["option","اختيار"],["responsible","مسؤول"],["consider","يأخذ في الاعتبار"],["benefit","فايدة"],
+      ["risk","خطر"],["wise","حكيم"]
+    ]},
+    {id:"u5", emoji:"🚀", color:"#FFD166", titleAr:"أحلام المستقبل", titleEn:"Future Dreams", words:[
+      ["career","مهنة"],["ambition","طموح"],["imagine","يتخيل"],["achieve","يحقق"],
+      ["profession","حرفة"],["plan","خطة"],["aim","هدف"],["opportunity","فرصة"],
+      ["skill","مهارة"],["journey","رحلة"]
+    ]},
+    {id:"u6", emoji:"🌍", color:"#F72585", titleAr:"مواطنون عالميون", titleEn:"Global Citizens", words:[
+      ["culture","ثقافة"],["environment","بيئة"],["community","مجتمع"],["tolerance","تسامح"],
+      ["diversity","تنوع"],["cooperate","يتعاون"],["recycle","يعيد التدوير"],["tradition","تقليد"],
+      ["respect","احترام"],["worldwide","حول العالم"]
+    ]}
+  ];
+
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+  function addDays(dateStr, days){
+    var d = new Date(dateStr+"T00:00:00");
+    d.setDate(d.getDate()+days);
+    return d.toISOString().slice(0,10);
+  }
+  function fmtDate(dateStr){
+    try{
+      var d = new Date(dateStr+"T00:00:00");
+      return d.toLocaleDateString("ar-EG",{day:"numeric",month:"short"});
+    }catch(e){ return dateStr; }
+  }
+  function uid(){ return "w_"+Date.now()+"_"+Math.floor(Math.random()*10000); }
+
+  function speak(text){
+    try{
+      if(!text || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-US";
+      u.rate = 0.85;
+      window.speechSynthesis.speak(u);
+    }catch(e){ /* speech not available on this device */ }
+  }
+  function stopSpeak(){
+    try{ if("speechSynthesis" in window) window.speechSynthesis.cancel(); }catch(e){}
+  }
+
+  function getName(){
+    return (DATA.childName && DATA.childName.trim()) ? DATA.childName.trim() : "بطل";
+  }
+  function withName(tpl){ return tpl.replace("{n}", getName()); }
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+  var PRAISE_HIGH = ["شاطر يا {n}! 🌟","برافو يا {n}!","تحفة يا {n}! 🏆","أحسنت يا {n}!","استمر كده يا {n}! 💪"];
+  var PRAISE_LOW = ["مفيش مشكلة يا {n}، حاول تاني!","قربت يا {n}، كمّل تمرين!","خطوة بخطوة يا {n}، هتحسن أكيد! 🌱"];
+  function formatRelativeDate(d){
+    if(!d) return "لسه ما بدأتش المراجعة";
+    var t = todayStr();
+    if(d===t) return "النهاردة";
+    if(d===addDays(t,-1)) return "إمبارح";
+    return fmtDate(d);
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  function buildDefaultData(){
+    var units = DEFAULT_UNITS.map(function(u){
+      return {
+        id:u.id, emoji:u.emoji, color:u.color, titleAr:u.titleAr, titleEn:u.titleEn,
+        words: u.words.map(function(pair,i){
+          return {id:u.id+"_"+i, en:pair[0], ar:pair[1], level:0, nextReview: todayStr(), lastReviewed:null};
+        })
+      };
+    });
+    return {
+      units: units,
+      childName: null,
+      streak:0, bestStreak:0, lastActiveDate:null,
+      planStart: todayStr(), planWeeks:16
+    };
+  }
+
+  var DATA = null;
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){ DATA = JSON.parse(raw); }
+      else { DATA = buildDefaultData(); save(); }
+    }catch(e){ DATA = buildDefaultData(); }
+  }
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
+    catch(e){ /* storage unavailable — app still works this session */ }
+  }
+
+  function allWords(){
+    var list = [];
+    DATA.units.forEach(function(u){
+      u.words.forEach(function(w){ list.push({unit:u, word:w}); });
+    });
+    return list;
+  }
+  function dueWords(){
+    var t = todayStr();
+    return allWords().filter(function(x){ return x.word.nextReview <= t; });
+  }
+  function unitById(id){
+    for(var i=0;i<DATA.units.length;i++){ if(DATA.units[i].id===id) return DATA.units[i]; }
+    return null;
+  }
+  function masteredCount(words){
+    return words.filter(function(w){ return w.level >= INTERVALS.length-1 && w.lastReviewed; }).length;
+  }
+
+  /* ---------- navigation ---------- */
+  var currentUnitId = null;
+
+  function showScreen(name){
+    document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("active"); });
+    document.getElementById("screen-"+name).classList.add("active");
+    document.querySelectorAll(".tab-btn").forEach(function(b){
+      b.classList.toggle("active", b.dataset.tab===name);
+    });
+    window.scrollTo(0,0);
+    if(name==="home") renderHome();
+    if(name==="units") renderUnits();
+    if(name==="plan") renderPlan();
+    if(name==="progress") renderProgress();
+  }
+
+  document.querySelectorAll(".tab-btn").forEach(function(b){
+    b.addEventListener("click", function(){ showScreen(b.dataset.tab); });
+  });
+
+  /* ---------- render: home ---------- */
+  function renderHome(){
+    var due = dueWords();
+    document.getElementById("home-greeting").textContent = "أهلاً يا " + getName() + "! 👋";
+    document.getElementById("home-sub").textContent = due.length>0
+      ? "عندك " + due.length + " كلمة محتاجة مراجعة النهاردة 🎯"
+      : "مفيش كلمات محتاجة مراجعة دلوقتي، برافو عليك! تقدر تتمرن براحتك.";
+    document.getElementById("home-last-active").textContent = "📌 آخر مراجعة: " + formatRelativeDate(DATA.lastActiveDate);
+    document.getElementById("streak-count").textContent = DATA.streak;
+    updateNamePill();
+
+    var mini = document.getElementById("mini-map");
+    mini.innerHTML = "";
+    DATA.units.forEach(function(u){
+      var pct = u.words.length ? Math.round(masteredCount(u.words)/u.words.length*100) : 0;
+      var div = document.createElement("button");
+      div.className = "mini-planet";
+      div.style.border = "1px solid var(--line)";
+      div.style.background = "var(--bg-panel)";
+      div.style.color = "var(--text)";
+      div.innerHTML =
+        '<div class="em">'+u.emoji+'</div>'+
+        '<div class="ring" style="background:conic-gradient('+u.color+' '+pct+'%, var(--bg-panel-alt) 0)">'+
+          '<div style="width:24px;height:24px;border-radius:50%;background:var(--bg-panel);display:flex;align-items:center;justify-content:center;font-size:9px;">'+pct+'%</div>'+
+        '</div>'+
+        '<div class="name">'+u.titleAr+'</div>';
+      div.addEventListener("click", function(){ openUnit(u.id); });
+      mini.appendChild(div);
+    });
+  }
+
+  document.getElementById("btn-start-due").addEventListener("click", function(){
+    var due = dueWords();
+    if(due.length===0){ showScreen("units"); return; }
+    startFlashSession(shuffle(due).map(function(x){return x.word;}), due.map(function(x){return x.unit;}));
+  });
+  document.getElementById("btn-browse-units").addEventListener("click", function(){ showScreen("units"); });
+
+  /* ---------- render: units map ---------- */
+  function renderUnits(){
+    var wrap = document.getElementById("planet-list");
+    wrap.innerHTML = "";
+    DATA.units.forEach(function(u){
+      var pct = u.words.length ? Math.round(masteredCount(u.words)/u.words.length*100) : 0;
+      var due = u.words.filter(function(w){ return w.nextReview <= todayStr(); }).length;
+      var row = document.createElement("button");
+      row.className = "planet-row";
+      row.style.setProperty("--accent", u.color);
+      row.innerHTML =
+        '<div class="planet-emoji">'+u.emoji+'</div>'+
+        '<div class="planet-info">'+
+          '<h3>'+u.titleAr+'</h3>'+
+          '<div class="en-title eng" style="direction:ltr; text-align:right;">'+u.titleEn+'</div>'+
+          '<div class="meta"><span>📖 '+u.words.length+' كلمة</span>'+(due>0?'<span style="color:var(--gold);">⏰ '+due+' محتاجة مراجعة</span>':'<span>✅ محدث</span>')+'</div>'+
+        '</div>'+
+        '<div class="progress-ring" style="background:conic-gradient('+u.color+' '+pct+'%, var(--bg-panel-alt) 0);">'+
+          '<div style="width:34px;height:34px;border-radius:50%;background:var(--bg-panel);display:flex;align-items:center;justify-content:center;">'+pct+'%</div>'+
+        '</div>';
+      row.addEventListener("click", function(){ openUnit(u.id); });
+      wrap.appendChild(row);
+    });
+  }
+
+  /* ---------- render: unit detail ---------- */
+  function openUnit(id){
+    currentUnitId = id;
+    showScreen("units"); // ensures tab state resets before switching
+    document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("active"); });
+    document.getElementById("screen-unit-detail").classList.add("active");
+    renderUnitDetail();
+  }
+  function renderUnitDetail(){
+    var u = unitById(currentUnitId);
+    if(!u) return;
+    document.getElementById("unit-detail-head").innerHTML =
+      '<div class="planet-emoji" style="background:color-mix(in srgb, '+u.color+' 22%, var(--bg-panel-alt));">'+u.emoji+'</div>'+
+      '<div><h2>'+u.titleAr+'</h2><div class="eng" style="direction:ltr; color:var(--text-faint); font-size:13px; margin-top:2px;">'+u.titleEn+'</div></div>';
+
+    var list = document.getElementById("unit-word-list");
+    list.innerHTML = "";
+    if(u.words.length===0){
+      list.innerHTML = '<p class="empty-note">لسه مفيش كلمات في الكوكب ده. ضيف أول كلمة من الزرار تحت 👇</p>';
+    }
+    u.words.forEach(function(w){
+      var stars = "";
+      for(var i=0;i<INTERVALS.length;i++){ stars += (i < w.level ? "★" : "☆"); }
+      var dueNote = w.nextReview <= todayStr()
+        ? "🔔 محتاجة مراجعة النهاردة"
+        : "الجاية: " + fmtDate(w.nextReview);
+      var row = document.createElement("div");
+      row.className = "word-row";
+      row.innerHTML =
+        '<div class="word-main">'+
+          '<div class="en-word" style="direction:ltr; text-align:right;">'+escapeHtml(w.en)+'</div>'+
+          '<div class="ar-word">'+escapeHtml(w.ar)+'</div>'+
+          '<div class="stars-mini">'+stars+'</div>'+
+          '<div class="due-note">'+dueNote+'</div>'+
+        '</div>'+
+        '<button class="row-btn speak-row-btn" aria-label="نطق الكلمة">🔊</button>'+
+        '<button class="row-btn edit-btn">✏️</button>';
+      row.querySelector(".speak-row-btn").addEventListener("click", function(){ speak(w.en); });
+      row.querySelector(".edit-btn").addEventListener("click", function(){ openWordModal(u.id, w.id); });
+      list.appendChild(row);
+    });
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  document.getElementById("btn-back-units").addEventListener("click", function(){ showScreen("units"); });
+  document.getElementById("btn-unit-flash").addEventListener("click", function(){
+    var u = unitById(currentUnitId);
+    if(!u || u.words.length===0) return;
+    startFlashSession(shuffle(u.words), u.words.map(function(){return u;}));
+  });
+  document.getElementById("btn-unit-quiz").addEventListener("click", function(){
+    var u = unitById(currentUnitId);
+    if(!u || u.words.length < 2) return;
+    startQuizSession(shuffle(u.words), u);
+  });
+  document.getElementById("btn-add-word").addEventListener("click", function(){
+    openWordModal(currentUnitId, null);
+  });
+
+  /* ---------- word add/edit modal ---------- */
+  var modalUnitId = null, modalWordId = null;
+  function openWordModal(unitId, wordId){
+    modalUnitId = unitId; modalWordId = wordId;
+    var u = unitById(unitId);
+    var w = wordId ? u.words.find(function(x){return x.id===wordId;}) : null;
+    document.getElementById("word-modal-title").textContent = w ? "تعديل الكلمة" : "إضافة كلمة جديدة";
+    document.getElementById("modal-en").value = w ? w.en : "";
+    document.getElementById("modal-ar").value = w ? w.ar : "";
+    document.getElementById("modal-delete").style.display = w ? "block" : "none";
+    document.getElementById("word-modal-bg").classList.add("active");
+    setTimeout(function(){ document.getElementById("modal-en").focus(); }, 50);
+  }
+  function closeWordModal(){ document.getElementById("word-modal-bg").classList.remove("active"); }
+  document.getElementById("modal-cancel").addEventListener("click", closeWordModal);
+  document.getElementById("word-modal-bg").addEventListener("click", function(e){
+    if(e.target.id==="word-modal-bg") closeWordModal();
+  });
+  document.getElementById("modal-save").addEventListener("click", function(){
+    var en = document.getElementById("modal-en").value.trim();
+    var ar = document.getElementById("modal-ar").value.trim();
+    if(!en || !ar) return;
+    var u = unitById(modalUnitId);
+    if(modalWordId){
+      var w = u.words.find(function(x){return x.id===modalWordId;});
+      w.en = en; w.ar = ar;
+    } else {
+      u.words.push({id:uid(), en:en, ar:ar, level:0, nextReview:todayStr(), lastReviewed:null});
+    }
+    save(); closeWordModal(); renderUnitDetail();
+  });
+  document.getElementById("modal-delete").addEventListener("click", function(){
+    var u = unitById(modalUnitId);
+    u.words = u.words.filter(function(x){return x.id!==modalWordId;});
+    save(); closeWordModal(); renderUnitDetail();
+  });
+
+  /* ---------- flashcard session ---------- */
+  var flashQueue = [], flashUnits = [], flashIndex = 0, flashCorrect = 0;
+  function startFlashSession(words, units){
+    flashQueue = words; flashUnits = units; flashIndex = 0; flashCorrect = 0;
+    document.getElementById("flip-card").classList.remove("flipped");
+    document.getElementById("overlay-flash").classList.add("active");
+    loadFlashCardContent();
+  }
+  // Only fills in the card's text/progress — assumes the card is already showing its front (unflipped).
+  // Never call this while the card is mid-flip, or the next answer would be visible during the animation.
+  function loadFlashCardContent(){
+    document.getElementById("flash-know-row").style.visibility = "hidden";
+    var w = flashQueue[flashIndex];
+    document.getElementById("flash-front-word").textContent = w.en;
+    document.getElementById("flash-back-word").textContent = w.en;
+    document.getElementById("flash-back-meaning").textContent = w.ar;
+    document.getElementById("flash-counter").textContent = (flashIndex+1)+"/"+flashQueue.length;
+    document.getElementById("flash-progress-fill").style.width = Math.round((flashIndex)/flashQueue.length*100)+"%";
+  }
+  document.getElementById("flip-card").addEventListener("click", function(){
+    this.classList.toggle("flipped");
+    document.getElementById("flash-know-row").style.visibility = "visible";
+    speak(flashQueue[flashIndex].en);
+  });
+  document.getElementById("flash-speak-btn").addEventListener("click", function(e){
+    e.stopPropagation();
+    speak(flashQueue[flashIndex].en);
+  });
+  function answerFlash(knewIt){
+    var w = flashQueue[flashIndex];
+    if(knewIt){ w.level = Math.min(w.level+1, INTERVALS.length-1); flashCorrect++; }
+    else { w.level = 0; }
+    w.nextReview = addDays(todayStr(), INTERVALS[w.level]);
+    w.lastReviewed = todayStr();
+    save();
+
+    var card = document.getElementById("flip-card");
+    var inner = card.querySelector(".flip-inner");
+    document.getElementById("flash-know-row").style.visibility = "hidden";
+    card.classList.remove("flipped"); // starts the unflip animation — content is NOT swapped yet, so only the word just answered is visible while it rotates away
+
+    flashIndex++;
+
+    var advanced = false;
+    function goNext(){
+      if(advanced) return;
+      advanced = true;
+      inner.removeEventListener("transitionend", onEnd);
+      if(flashIndex >= flashQueue.length){ endFlashSession(); }
+      else { loadFlashCardContent(); } // safe now — the card has finished rotating back to its front face
+    }
+    function onEnd(e){ if(e.propertyName === "transform"){ goNext(); } }
+    inner.addEventListener("transitionend", onEnd);
+    setTimeout(goNext, 550); // fallback in case transitionend doesn't fire (e.g. reduced-motion settings)
+  }
+  document.getElementById("btn-know-it").addEventListener("click", function(){ answerFlash(true); });
+  document.getElementById("btn-still-learning").addEventListener("click", function(){ answerFlash(false); });
+  document.getElementById("flash-close").addEventListener("click", function(){
+    stopSpeak();
+    document.getElementById("overlay-flash").classList.remove("active");
+  });
+  function endFlashSession(){
+    stopSpeak();
+    document.getElementById("overlay-flash").classList.remove("active");
+    registerActivity();
+    var pct = flashQueue.length ? Math.round(flashCorrect/flashQueue.length*100) : 0;
+    var title = withName(pick(pct>=70 ? PRAISE_HIGH : PRAISE_LOW));
+    var sub = "عرفت "+flashCorrect+" من "+flashQueue.length+" كلمة صح. سلسلتك دلوقتي "+DATA.streak+" يوم 🔥";
+    showSummary(pct>=70 ? "🎉" : "💪", title, sub);
+  }
+
+  /* ---------- quiz session ---------- */
+  var quizQueue = [], quizIndex = 0, quizCorrect = 0, quizLocked = false;
+  function startQuizSession(words, unitForPool){
+    quizQueue = words.slice();   // كل كلمات الوحدة (words جاية already متعمللها shuffle)
+    quizIndex = 0; quizCorrect = 0;
+    document.getElementById("overlay-quiz").classList.add("active");
+    renderQuizQ(unitForPool);
+  }
+  function getDistractors(word, pool, count){
+    var others = pool.filter(function(w){ return w.id !== word.id; });
+    return shuffle(others).slice(0, count);
+  }
+  function renderQuizQ(unitForPool){
+    quizLocked = false;
+    var w = quizQueue[quizIndex];
+    var askEnglish = Math.random() < 0.5;
+    var pool = (unitForPool && unitForPool.words && unitForPool.words.length>=4) ? unitForPool.words : allWords().map(function(x){return x.word;});
+    var distractors = getDistractors(w, pool, 3);
+    var options = shuffle([w].concat(distractors));
+
+    document.getElementById("quiz-question-label").textContent = askEnglish ? "إيه معنى الكلمة دي؟" : "إيه الكلمة الإنجليزية الصح؟";
+    var qEl = document.getElementById("quiz-word");
+    var speakBtn = document.getElementById("quiz-speak-btn");
+    if(askEnglish){
+      qEl.textContent = w.en; qEl.classList.add("eng"); qEl.style.direction="ltr";
+      speakBtn.style.display = "flex";
+      speakBtn.onclick = function(){ speak(w.en); };
+    } else {
+      qEl.textContent = w.ar; qEl.classList.remove("eng"); qEl.style.direction="rtl";
+      speakBtn.style.display = "none";
+      speakBtn.onclick = null;
+    }
+
+    var optsWrap = document.getElementById("quiz-opts");
+    optsWrap.innerHTML = "";
+    options.forEach(function(opt){
+      var btn = document.createElement("button");
+      btn.className = "quiz-opt";
+      var label = askEnglish ? opt.ar : opt.en;
+      if(!askEnglish){ btn.style.direction = "ltr"; btn.style.textAlign="right"; btn.classList.add("eng"); }
+      btn.textContent = label;
+      btn.addEventListener("click", function(){ handleQuizAnswer(opt.id===w.id, btn, w, unitForPool); });
+      optsWrap.appendChild(btn);
+    });
+
+    document.getElementById("quiz-counter").textContent = (quizIndex+1)+"/"+quizQueue.length;
+    document.getElementById("quiz-progress-fill").style.width = Math.round(quizIndex/quizQueue.length*100)+"%";
+  }
+  function handleQuizAnswer(isCorrect, btnEl, w, unitForPool){
+    if(quizLocked) return;
+    quizLocked = true;
+    document.querySelectorAll("#quiz-opts .quiz-opt").forEach(function(b){ b.disabled = true; });
+    btnEl.classList.add(isCorrect ? "correct" : "wrong");
+    if(isCorrect){ w.level = Math.min(w.level+1, INTERVALS.length-1); quizCorrect++; }
+    else { w.level = 0; }
+    w.nextReview = addDays(todayStr(), INTERVALS[w.level]);
+    w.lastReviewed = todayStr();
+    save();
+    setTimeout(function(){
+      quizIndex++;
+      if(quizIndex >= quizQueue.length){ endQuizSession(); }
+      else { renderQuizQ(unitForPool); }
+    }, 850);
+  }
+  document.getElementById("quiz-close").addEventListener("click", function(){
+    document.getElementById("overlay-quiz").classList.remove("active");
+  });
+  function endQuizSession(){
+    document.getElementById("overlay-quiz").classList.remove("active");
+    registerActivity();
+    var pct = Math.round(quizCorrect/quizQueue.length*100);
+    var emoji = pct>=80 ? "🏆" : pct>=50 ? "👍" : "🌱";
+    var title = withName(pick(pct>=70 ? PRAISE_HIGH : PRAISE_LOW));
+    var sub = "نتيجتك: "+quizCorrect+"/"+quizQueue.length+" — سلسلتك دلوقتي "+DATA.streak+" يوم 🔥";
+    showSummary(emoji, title, sub);
+  }
+
+  function showSummary(emoji, title, sub){
+    document.getElementById("summary-emoji").textContent = emoji;
+    document.getElementById("summary-title").textContent = title;
+    document.getElementById("summary-sub").textContent = sub;
+    document.getElementById("overlay-summary").classList.add("active");
+  }
+  document.getElementById("summary-done").addEventListener("click", function(){
+    stopSpeak();
+    document.getElementById("overlay-summary").classList.remove("active");
+    showScreen("home");
+  });
+
+  function registerActivity(){
+    var t = todayStr();
+    if(DATA.lastActiveDate === t) return; // already counted today
+    if(DATA.lastActiveDate === addDays(t,-1)){ DATA.streak += 1; }
+    else { DATA.streak = 1; }
+    DATA.bestStreak = Math.max(DATA.bestStreak||0, DATA.streak);
+    DATA.lastActiveDate = t;
+    save();
+  }
+
+  /* ---------- term plan ---------- */
+  function renderPlan(){
+    document.getElementById("plan-start-date").value = DATA.planStart;
+    document.getElementById("plan-weeks").value = DATA.planWeeks;
+    var wrap = document.getElementById("plan-list");
+    wrap.innerHTML = "";
+    var totalWeeks = DATA.planWeeks;
+    var perUnit = totalWeeks / DATA.units.length;
+    var cursorDate = DATA.planStart;
+    DATA.units.forEach(function(u, idx){
+      var startD = cursorDate;
+      var weeksForThis = Math.round(perUnit);
+      var endD = addDays(startD, Math.max(7, Math.round(perUnit*7))-1);
+      cursorDate = addDays(startD, Math.round(perUnit*7));
+      var item = document.createElement("div");
+      item.className = "plan-item";
+      item.style.setProperty("--accent", u.color);
+      item.innerHTML =
+        '<div class="planet-emoji">'+u.emoji+'</div>'+
+        '<div><div class="pi-title">Unit '+(idx+1)+': '+u.titleAr+'</div>'+
+        '<div class="pi-date">'+fmtDate(startD)+' — '+fmtDate(endD)+'</div></div>';
+      wrap.appendChild(item);
+    });
+  }
+  document.getElementById("plan-start-date").addEventListener("change", function(){
+    DATA.planStart = this.value || todayStr(); save(); renderPlan();
+  });
+  document.getElementById("plan-weeks").addEventListener("change", function(){
+    var v = parseInt(this.value,10);
+    DATA.planWeeks = (v>=8 && v<=24) ? v : 16; save(); renderPlan();
+  });
+
+  /* ---------- progress screen ---------- */
+  function renderProgress(){
+    var all = allWords().map(function(x){return x.word;});
+    document.getElementById("stat-total").textContent = all.length;
+    document.getElementById("stat-mastered").textContent = masteredCount(all);
+    document.getElementById("stat-streak").textContent = DATA.streak;
+    document.getElementById("stat-best-streak").textContent = DATA.bestStreak||0;
+
+    var wrap = document.getElementById("progress-per-unit");
+    wrap.innerHTML = "";
+    DATA.units.forEach(function(u){
+      var pct = u.words.length ? Math.round(masteredCount(u.words)/u.words.length*100) : 0;
+      var box = document.createElement("div");
+      box.className = "word-row";
+      box.style.display = "block";
+      box.innerHTML =
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">'+
+          '<span style="font-weight:700; font-size:14px;">'+u.emoji+' '+u.titleAr+'</span>'+
+          '<span style="font-size:12.5px; color:var(--text-dim);">'+pct+'%</span>'+
+        '</div>'+
+        '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%; background:'+u.color+';"></div></div>';
+      wrap.appendChild(box);
+    });
+  }
+  document.getElementById("btn-reset").addEventListener("click", function(){
+    if(confirm("متأكد إنك عايز تمسح كل البيانات وترجع للوضع الافتراضي؟")){
+      DATA = buildDefaultData(); save(); showScreen("home");
+    }
+  });
+
+  /* ---------- welcome / name ---------- */
+  function updateNamePill(){
+    var el = document.getElementById("name-pill-text");
+    if(el) el.textContent = getName();
+  }
+  function openWelcome(isRename){
+    document.getElementById("welcome-title").textContent = isRename ? "غيّر اسمك" : "أهلاً بيك في رحلة الكلمات!";
+    document.getElementById("welcome-name-input").value = isRename ? (DATA.childName || "") : "";
+    document.getElementById("welcome-start-btn").textContent = isRename ? "تم الحفظ ✅" : "يلا نبدأ الرحلة 🚀";
+    document.getElementById("overlay-welcome").classList.add("active");
+    setTimeout(function(){ document.getElementById("welcome-name-input").focus(); }, 60);
+  }
+  document.getElementById("btn-name-pill").addEventListener("click", function(){ openWelcome(true); });
+  document.getElementById("welcome-start-btn").addEventListener("click", function(){
+    var v = document.getElementById("welcome-name-input").value.trim();
+    DATA.childName = v || null;
+    save();
+    document.getElementById("overlay-welcome").classList.remove("active");
+    updateNamePill();
+    renderHome();
+  });
+
+  /* ---------- init ---------- */
+  load();
+  showScreen("home");
+  updateNamePill();
+  if(!DATA.childName){ openWelcome(false); }
+})();
+</script>
+</body>
+</html>
